@@ -1,20 +1,60 @@
+---
+
+---
 
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <title>Página no encontrada</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background-color: #0f172a;
+        color: #f1f5f9;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 4rem;
+        margin: 0.5em 0;
+      }
+
+      p {
+        font-size: 1.25rem;
+        max-width: 500px;
+        margin-bottom: 2em;
+      }
+
+      a {
+        background-color: #cc0000;
+        color: white;
+        padding: 0.75em 1.5em;
+        border-radius: 0.5em;
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+      }
+
+      a:hover {
+        background-color: #8b0101;
+      }
+    </style>
   </head>
   <body class="bg-slate-900 text-slate-100 flex flex-col items-center justify-center min-h-screen p-6">
-    <img src="/public/img/civicon-bl.png" alt="Logo" style="height: 100px;" />
+    <img style="height: 120px;" src="https://github.com/Bastianinacap2025/imagenes/blob/main/civicon-bl.png?raw=true" alt="Logo" class="w-32 h-auto mb-8" />
 
     <h1 class="text-5xl font-bold mb-4">Error 404</h1>
     <p class="text-lg mb-6 text-center max-w-md">
       La página que buscas no existe o fue eliminada. Pero no te preocupes, aún puedes volver al inicio.
     </p>
 
-    <a href="/" class="bg-#CC0000-600 hover:#970101-500 text-white font-semibold py-2 px-4 rounded-lg transition">
+    <a href="/" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition">
       Volver al inicio
     </a>
   </body>
