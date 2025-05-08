@@ -237,7 +237,7 @@ function formatDate(dateString: string) {
   function cerrarModal() {
     modal?.classList.add('hidden');
     if (form) {
-      form.reset();
+      (form as HTMLFormElement).reset();
     }
   }
 
@@ -254,7 +254,7 @@ function formatDate(dateString: string) {
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const formData = new FormData(form);
+    const formData = new FormData(form as HTMLFormElement);
     const data = Object.fromEntries(formData);
     
     try {

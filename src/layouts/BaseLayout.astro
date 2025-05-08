@@ -15,6 +15,10 @@ const {
 <!DOCTYPE html>
 <html lang="es">
   <head>
+    <!-- analiticas -->
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="d7b8f669-9341-44db-aa7b-e4c172f2eba3"></script>
+
+    <!-- titulos -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title} | CivicON</title>
@@ -86,11 +90,11 @@ const {
         document.documentElement.classList.add('dark');
       }
 
-      window.localStorage.setItem('theme', theme);
+      window.localStorage.setItem('theme', theme || 'light');
 
       // Listen for theme toggle
       document.addEventListener('theme-change', (e) => {
-        const isDark = e.detail.theme === 'dark';
+        const isDark = (e as CustomEvent).detail.theme === 'dark';
         if (isDark) {
           document.documentElement.classList.add('dark');
           localStorage.theme = 'dark';
