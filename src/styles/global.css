@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+/* Custom styles */
+@layer base {
+    body {
+      @apply transition-colors duration-300;
+    }
+  }
+  
+  /* Dark mode transitions */
+  .dark {
+    @apply bg-gray-900 text-white;
+  }
+  
+  /* Custom utilities */
+  @layer utilities {
+    .text-balance {
+      text-wrap: balance;
+    }
+  }

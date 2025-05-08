@@ -1,0 +1,250 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="Registro">
+  <Header />
+
+  <main class="pt-32 pb-20">
+    <div class="container mx-auto px-4">
+      <div class="max-w-md mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-center">Crear cuenta</h1>
+        
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <form id="registerForm" class="space-y-6">
+            <!-- Nombre -->
+            <div>
+              <label for="nombre" class="block text-sm font-medium mb-2">
+                Nombre
+              </label>
+              <input
+                type="text"
+                id="nombre"
+                name="nombre"
+                required
+                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+              />
+            </div>
+
+            <!-- Apellido -->
+            <div>
+              <label for="apellido" class="block text-sm font-medium mb-2">
+                Apellido
+              </label>
+              <input
+                type="text"
+                id="apellido"
+                name="apellido"
+                required
+                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+              />
+            </div>
+
+            <!-- RUT -->
+            <div>
+              <label for="rut" class="block text-sm font-medium mb-2">
+                RUT
+              </label>
+              <input
+                type="text"
+                id="rut"
+                name="rut"
+                placeholder="12.345.678-9"
+                required
+                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+              />
+              <p id="rutError" class="text-red-500 text-sm mt-1 hidden">
+                RUT inválido
+              </p>
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label for="email" class="block text-sm font-medium mb-2">
+                Correo electrónico
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+              />
+            </div>
+
+            <!-- Teléfono -->
+            <div>
+              <label for="telefono" class="block text-sm font-medium mb-2">
+                Teléfono
+              </label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                  +56
+                </span>
+                <input
+                  type="tel"
+                  id="telefono"
+                  name="telefono"
+                  required
+                  placeholder="9 1234 5678"
+                  class="flex-1 px-4 py-2 rounded-r-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+              </div>
+            </div>
+
+            <!-- Contraseña -->
+            <div>
+              <label for="password" class="block text-sm font-medium mb-2">
+                Contraseña
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                required
+                minlength="8"
+                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+              />
+              <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Mínimo 8 caracteres
+              </p>
+            </div>
+
+            <!-- Submit Button -->
+            <button
+              type="submit"
+              class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-semibold transition-colors"
+            >
+              Crear cuenta
+            </button>
+          </form>
+
+          <!-- Login Link -->
+          <p class="text-center mt-6 text-gray-600 dark:text-gray-300">
+            ¿Ya tienes cuenta?
+            <a href="/login" class="text-red-600 dark:text-red-400 hover:underline">
+              Iniciar sesión
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  // RUT validation function
+  function validateRUT(rut) {
+    // Remove dots and dashes
+    rut = rut.replace(/\./g, '').replace(/-/g, '');
+    
+    // Extract digits and verifier
+    const digits = rut.slice(0, -1);
+    const verifier = rut.slice(-1).toLowerCase();
+    
+    // Calculate verifier
+    let sum = 0;
+    let multiplier = 2;
+    
+    // Iterate from right to left
+    for (let i = digits.length - 1; i >= 0; i--) {
+      sum += digits[i] * multiplier;
+      multiplier = multiplier === 7 ? 2 : multiplier + 1;
+    }
+    
+    // Calculate expected verifier
+    const expectedVerifier = 11 - (sum % 11);
+    let calculatedVerifier;
+    
+    if (expectedVerifier === 11) calculatedVerifier = '0';
+    else if (expectedVerifier === 10) calculatedVerifier = 'k';
+    else calculatedVerifier = expectedVerifier.toString();
+    
+    return calculatedVerifier === verifier;
+  }
+
+  // Format RUT with dots and dash
+  function formatRUT(rut) {
+    rut = rut.replace(/\./g, '').replace(/-/g, '');
+    const digits = rut.slice(0, -1);
+    const verifier = rut.slice(-1);
+    
+    // Add dots every three digits from right to left
+    let formattedDigits = '';
+    for (let i = digits.length - 1; i >= 0; i--) {
+      if ((digits.length - i - 1) % 3 === 0 && i !== digits.length - 1) {
+        formattedDigits = '.' + formattedDigits;
+      }
+      formattedDigits = digits[i] + formattedDigits;
+    }
+    
+    return formattedDigits + '-' + verifier;
+  }
+
+  // Form handling
+  const form = document.getElementById('registerForm');
+  const rutInput = document.getElementById('rut');
+  const rutError = document.getElementById('rutError');
+  const phoneInput = document.getElementById('telefono');
+
+  // RUT input handling
+  rutInput?.addEventListener('input', (e) => {
+    const input = e.target as HTMLInputElement;
+    let value = input.value.replace(/[^\dkK]/g, '');
+    
+    if (value.length > 0) {
+      value = formatRUT(value);
+      input.value = value;
+      
+      // Validate RUT
+      const isValid = validateRUT(value);
+      rutError?.classList.toggle('hidden', isValid);
+      input.classList.toggle('border-red-500', !isValid);
+    }
+  });
+
+  // Phone input handling
+  phoneInput?.addEventListener('input', (e) => {
+    const input = e.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, '');
+    
+    // Format phone number: 9 1234 5678
+    if (value.length > 0) {
+      value = value.match(/.{1,4}/g)?.join(' ') || value;
+      input.value = value;
+    }
+  });
+
+  // Form submission
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    
+    // Validate RUT before submission
+    if (!validateRUT(data.rut as string)) {
+      rutError?.classList.remove('hidden');
+      return;
+    }
+    
+    try {
+      // Here you would typically send the data to your backend
+      console.log('Form data:', data);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Redirect to verification page
+      alert('Registro exitoso! Por favor verifica tu correo electrónico.');
+      window.location.href = '/verificar-email';
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al registrar. Por favor intenta nuevamente.');
+    }
+  });
+</script>

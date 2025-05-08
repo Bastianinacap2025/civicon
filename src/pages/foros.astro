@@ -1,0 +1,277 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const categorias = [
+  {
+    id: 'derechos-digitales',
+    nombre: 'Derechos Digitales',
+    descripcion: 'Discusiones sobre privacidad, libertad de expresión y derechos en el entorno digital.',
+    icon: 'fa-shield-alt',
+    temas: [
+      {
+        id: 1,
+        titulo: 'Privacidad en Redes Sociales',
+        autor: 'Danixa',
+        respuestas: 23,
+        vistas: 156,
+        ultimaActividad: '2025-05-07T15:30:00'
+      },
+      {
+        id: 2,
+        titulo: 'Derecho al Olvido Digital',
+        autor: 'Benjamin Navarro',
+        respuestas: 15,
+        vistas: 98,
+        ultimaActividad: '2025-05-06T10:45:00'
+      }
+    ]
+  },
+  {
+    id: 'participacion-ciudadana',
+    nombre: 'Participación Ciudadana',
+    descripcion: 'Debates sobre mecanismos de participación, consultas públicas y democracia digital.',
+    icon: 'fa-users',
+    temas: [
+      {
+        id: 3,
+        titulo: 'Propuestas para Mejorar la Participación Digital',
+        autor: 'Eduardo adias',
+        respuestas: 45,
+        vistas: 289,
+        ultimaActividad: '2025-05-07T18:20:00'
+      }
+    ]
+  },
+  {
+    id: 'educacion-digital',
+    nombre: 'Educación Digital',
+    descripcion: 'Conversaciones sobre alfabetización digital, recursos educativos y metodologías.',
+    icon: 'fa-graduation-cap',
+    temas: [
+      {
+        id: 4,
+        titulo: 'Herramientas para la Educación en Línea',
+        autor: 'Bastian Campos',
+        respuestas: 32,
+        vistas: 178,
+        ultimaActividad: '2025-05-07T09:15:00'
+      }
+    ]
+  }
+];
+
+function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('es-CL', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+---
+
+<BaseLayout title="Foros">
+  <Header />
+
+  <main class="pt-32 pb-20">
+    <div class="container mx-auto px-4">
+      <div class="max-w-5xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+          <h1 class="text-3xl font-bold">Foros de Discusión</h1>
+          <button
+            id="nuevoTema"
+            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center"
+          >
+            <i class="fas fa-plus mr-2"></i>
+            Nuevo Tema
+          </button>
+        </div>
+
+        <!-- Categorías -->
+        <div class="space-y-6">
+          {categorias.map((categoria) => (
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+              <!-- Cabecera de categoría -->
+              <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-start space-x-4">
+                  <div class="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i class={`fas ${categoria.icon} text-red-600 dark:text-red-400 text-2xl`}></i>
+                  </div>
+                  <div>
+                    <h2 class="text-xl font-semibold mb-2">{categoria.nombre}</h2>
+                    <p class="text-gray-600 dark:text-gray-300">
+                      {categoria.descripcion}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lista de temas -->
+              <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                {categoria.temas.map((tema) => (
+                  <div class="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <div class="flex items-start justify-between">
+                      <div class="flex-1">
+                        <a 
+                          href={`/foros/${categoria.id}/${tema.id}`}
+                          class="text-lg font-medium hover:text-red-600 dark:hover:text-red-400 mb-2 block"
+                        >
+                          {tema.titulo}
+                        </a>
+                        <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 space-x-4">
+                          <span class="flex items-center">
+                            <i class="far fa-user mr-2"></i>
+                            {tema.autor}
+                          </span>
+                          <span class="flex items-center">
+                            <i class="far fa-comment mr-2"></i>
+                            {tema.respuestas} respuestas
+                          </span>
+                          <span class="flex items-center">
+                            <i class="far fa-eye mr-2"></i>
+                            {tema.vistas} vistas
+                          </span>
+                        </div>
+                      </div>
+                      <div class="text-sm text-gray-500 dark:text-gray-400">
+                        <i class="far fa-clock mr-1"></i>
+                        {formatDate(tema.ultimaActividad)}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Nuevo Tema -->
+    <div id="nuevoTemaModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-lg w-full mx-4">
+        <h3 class="text-xl font-semibold mb-4">Crear Nuevo Tema</h3>
+        
+        <form id="nuevoTemaForm" class="space-y-4">
+          <div>
+            <label for="categoria" class="block text-sm font-medium mb-2">
+              Categoría
+            </label>
+            <select
+              id="categoria"
+              name="categoria"
+              required
+              class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+            >
+              {categorias.map((categoria) => (
+                <option value={categoria.id}>{categoria.nombre}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label for="titulo" class="block text-sm font-medium mb-2">
+              Título
+            </label>
+            <input
+              type="text"
+              id="titulo"
+              name="titulo"
+              required
+              class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+            />
+          </div>
+
+          <div>
+            <label for="contenido" class="block text-sm font-medium mb-2">
+              Contenido
+            </label>
+            <textarea
+              id="contenido"
+              name="contenido"
+              rows="5"
+              required
+              class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+            ></textarea>
+          </div>
+
+          <div class="flex justify-end space-x-4 mt-6">
+            <button
+              type="button"
+              id="cancelarTema"
+              class="px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              Publicar Tema
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  const nuevoTemaBtn = document.getElementById('nuevoTema');
+  const modal = document.getElementById('nuevoTemaModal');
+  const cancelarBtn = document.getElementById('cancelarTema');
+  const form = document.getElementById('nuevoTemaForm');
+
+  // Abrir modal
+  nuevoTemaBtn?.addEventListener('click', () => {
+    modal?.classList.remove('hidden');
+  });
+
+  // Cerrar modal
+  function cerrarModal() {
+    modal?.classList.add('hidden');
+    if (form) {
+      form.reset();
+    }
+  }
+
+  cancelarBtn?.addEventListener('click', cerrarModal);
+
+  // Cerrar modal al hacer clic fuera
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      cerrarModal();
+    }
+  });
+
+  // Manejar envío del formulario
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    
+    try {
+      // Aquí se enviaría la data al backend
+      console.log('Nuevo tema:', data);
+      
+      // Simular envío
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Cerrar modal y mostrar mensaje de éxito
+      cerrarModal();
+      alert('¡Tema creado exitosamente!');
+      
+      // En una implementación real, aquí se actualizaría la lista de temas
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al crear el tema. Por favor intenta nuevamente.');
+    }
+  });
+</script>

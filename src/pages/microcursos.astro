@@ -1,0 +1,204 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const cursos = [
+  {
+    id: 1,
+    titulo: "Introducción a los Derechos Digitales",
+    descripcion: "Aprende los conceptos básicos sobre tus derechos en el entorno digital y cómo protegerlos.",
+    imagen: "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    duracion: "2 horas",
+    modulos: 4,
+    nivel: "Principiante",
+    categoria: "Derechos Digitales",
+    inscritos: 234
+  },
+  {
+    id: 2,
+    titulo: "Participación Ciudadana Digital",
+    descripcion: "Descubre las herramientas y plataformas para participar activamente en la democracia digital.",
+    imagen: "https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    duracion: "3 horas",
+    modulos: 5,
+    nivel: "Intermedio",
+    categoria: "Participación Ciudadana",
+    inscritos: 156
+  },
+  {
+    id: 3,
+    titulo: "Seguridad y Privacidad en Internet",
+    descripcion: "Aprende a proteger tu información personal y navegar de forma segura en la red.",
+    imagen: "https://images.pexels.com/photos/5380642/pexels-photo-5380642.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    duracion: "2.5 horas",
+    modulos: 6,
+    nivel: "Principiante",
+    categoria: "Seguridad Digital",
+    inscritos: 312
+  }
+];
+
+const categorias = [
+  "Todos",
+  "Derechos Digitales",
+  "Participación Ciudadana",
+  "Seguridad Digital",
+  "Alfabetización Digital"
+];
+
+const niveles = ["Principiante", "Intermedio", "Avanzado"];
+---
+
+<BaseLayout title="Microcursos">
+  <Header />
+
+  <main class="pt-32 pb-20">
+    <div class="container mx-auto px-4">
+      <div class="max-w-6xl mx-auto">
+        <!-- Header Section -->
+        <div class="text-center mb-12">
+          <h1 class="text-4xl font-bold mb-4">Microcursos</h1>
+          <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Aprende sobre ciudadanía y derechos digitales con nuestros cursos breves y prácticos
+          </p>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Búsqueda -->
+            <div>
+              <label for="buscar" class="block text-sm font-medium mb-2">
+                Buscar
+              </label>
+              <div class="relative">
+                <input
+                  type="text"
+                  id="buscar"
+                  placeholder="Buscar cursos..."
+                  class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+              </div>
+            </div>
+
+            <!-- Categoría -->
+            <div>
+              <label for="categoria" class="block text-sm font-medium mb-2">
+                Categoría
+              </label>
+              <select
+                id="categoria"
+                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                {categorias.map((categoria) => (
+                  <option value={categoria}>{categoria}</option>
+                ))}
+              </select>
+            </div>
+
+            <!-- Nivel -->
+            <div>
+              <label for="nivel" class="block text-sm font-medium mb-2">
+                Nivel
+              </label>
+              <select
+                id="nivel"
+                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                <option value="todos">Todos los niveles</option>
+                {niveles.map((nivel) => (
+                  <option value={nivel}>{nivel}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cursos Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {cursos.map((curso) => (
+            <article class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden group hover:shadow-xl transition-shadow">
+              <div class="relative">
+                <img
+                  src={curso.imagen}
+                  alt={curso.titulo}
+                  class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div class="absolute top-4 right-4 bg-white dark:bg-gray-800 rounded-full px-3 py-1 text-sm font-medium">
+                  {curso.nivel}
+                </div>
+              </div>
+
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2 group-hover:text-red-600 dark:group-hover:text-red-400">
+                  {curso.titulo}
+                </h3>
+                <p class="text-gray-600 dark:text-gray-300 mb-4">
+                  {curso.descripcion}
+                </p>
+
+                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 space-x-4 mb-4">
+                  <span class="flex items-center">
+                    <i class="far fa-clock mr-2"></i>
+                    {curso.duracion}
+                  </span>
+                  <span class="flex items-center">
+                    <i class="far fa-folder mr-2"></i>
+                    {curso.modulos} módulos
+                  </span>
+                  <span class="flex items-center">
+                    <i class="far fa-user mr-2"></i>
+                    {curso.inscritos} inscritos
+                  </span>
+                </div>
+
+                <a
+                  href={`/microcursos/${curso.id}`}
+                  class="block w-full bg-red-600 hover:bg-red-700 text-white text-center py-2 rounded-lg transition-colors"
+                >
+                  Comenzar curso
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  // Filtrado de cursos
+  const buscarInput = document.getElementById('buscar');
+  const categoriaSelect = document.getElementById('categoria');
+  const nivelSelect = document.getElementById('nivel');
+
+  function filtrarCursos() {
+    const busqueda = (buscarInput as HTMLInputElement)?.value.toLowerCase();
+    const categoria = categoriaSelect?.value;
+    const nivel = nivelSelect?.value;
+
+    const cursos = document.querySelectorAll('article');
+    
+    cursos.forEach(curso => {
+      const titulo = curso.querySelector('h3')?.textContent?.toLowerCase() || '';
+      const descripcion = curso.querySelector('p')?.textContent?.toLowerCase() || '';
+      const cursoNivel = curso.querySelector('.absolute')?.textContent?.trim() || '';
+      const cursoCategoria = curso.querySelector('.far.fa-folder')?.nextSibling?.textContent?.trim() || '';
+
+      const coincideBusqueda = titulo.includes(busqueda) || descripcion.includes(busqueda);
+      const coincidenFiltros = (categoria === 'Todos' || cursoCategoria === categoria) &&
+                              (nivel === 'todos' || cursoNivel === nivel);
+
+      curso.style.display = coincideBusqueda && coincidenFiltros ? 'block' : 'none';
+    });
+  }
+
+  buscarInput?.addEventListener('input', filtrarCursos);
+  categoriaSelect?.addEventListener('change', filtrarCursos);
+  nivelSelect?.addEventListener('change', filtrarCursos);
+</script>

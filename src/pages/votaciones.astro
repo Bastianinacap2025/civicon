@@ -1,0 +1,178 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const votaciones = [
+  {
+    id: 1,
+    titulo: "Propuesta de Ley de Protección de Datos Personales",
+    descripcion: "Esta propuesta busca regular el tratamiento de datos personales y fortalecer los derechos de los ciudadanos en el entorno digital.",
+    opciones: ["A favor", "En contra", "Abstención"],
+    fechaLimite: "2025-04-14",
+    participantes: 5
+  },
+  {
+    id: 2,
+    titulo: "Iniciativa de Educación Digital",
+    descripcion: "Proyecto para implementar programas de alfabetización digital en escuelas públicas y privadas.",
+    opciones: ["Apruebo", "Rechazo"],
+    fechaLimite: "2025-04-14",
+    participantes: 5
+  }
+];
+---
+
+<BaseLayout title="Votaciones">
+  <Header />
+
+  <main class="pt-32 pb-20">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Votaciones Activas</h1>
+
+        <div class="space-y-8">
+          {votaciones.map((votacion) => (
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+              <div class="mb-6">
+                <h2 class="text-2xl font-semibold mb-3">{votacion.titulo}</h2>
+                <p class="text-gray-600 dark:text-gray-300 mb-4">
+                  {votacion.descripcion}
+                </p>
+                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 space-x-4">
+                  <span class="flex items-center">
+                    <i class="far fa-calendar-alt mr-2"></i>
+                    Fecha límite: {votacion.fechaLimite}
+                  </span>
+                  <span class="flex items-center">
+                    <i class="far fa-user mr-2"></i>
+                    {votacion.participantes} participantes
+                  </span>
+                </div>
+              </div>
+
+              <div class="space-y-4" data-votacion-id={votacion.id}>
+                {votacion.opciones.map((opcion) => (
+                  <div class="relative">
+                    <button 
+                      class="w-full text-left px-4 py-3 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-red-500 dark:hover:border-red-500 transition-colors group"
+                      data-opcion={opcion}
+                    >
+                      <div class="flex items-center justify-between">
+                        <span class="font-medium group-hover:text-red-600 dark:group-hover:text-red-400">
+                          {opcion}
+                        </span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400 votacion-porcentaje">
+                          --
+                        </span>
+                      </div>
+                      <div class="absolute left-0 bottom-0 h-1 bg-red-600 rounded-b-lg transition-all duration-300 opacity-0 progress-bar" style="width: 0%"></div>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Resultados Modal -->
+        <div id="resultadosModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4">
+            <h3 class="text-xl font-semibold mb-4">¡Gracias por tu voto!</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-6">
+              Tu voto ha sido registrado exitosamente. Los resultados actuales se mostrarán a continuación.
+            </p>
+            <button 
+              id="cerrarModal"
+              class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-semibold transition-colors"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  // Simulated voting data
+  const votacionesData = {
+    1: {
+      "A favor": 45,
+      "En contra": 35,
+      "Abstención": 20
+    },
+    2: {
+      "Apruebo": 65,
+      "Rechazo": 35
+    }
+  };
+
+  // Handle voting
+  document.querySelectorAll('[data-votacion-id]').forEach(votacionEl => {
+    const votacionId = votacionEl.getAttribute('data-votacion-id');
+    const buttons = votacionEl.querySelectorAll('button');
+    
+    buttons.forEach(button => {
+      button.addEventListener('click', () => handleVote(votacionId, button));
+    });
+  });
+
+  function handleVote(votacionId: string, selectedButton: HTMLButtonElement) {
+    // Disable all buttons in this votacion
+    const votacionEl = selectedButton.closest('[data-votacion-id]');
+    const allButtons = votacionEl?.querySelectorAll('button');
+    allButtons?.forEach(button => {
+      button.disabled = true;
+      button.classList.add('opacity-50');
+    });
+
+    // Show results
+    showResults(votacionId);
+    
+    // Show modal
+    const modal = document.getElementById('resultadosModal');
+    modal?.classList.remove('hidden');
+  }
+
+  function showResults(votacionId: string) {
+    const resultados = votacionesData[votacionId];
+    const votacionEl = document.querySelector(`[data-votacion-id="${votacionId}"]`);
+    
+    if (!votacionEl) return;
+
+    const buttons = votacionEl.querySelectorAll('button');
+    buttons.forEach(button => {
+      const opcion = button.getAttribute('data-opcion');
+      if (!opcion) return;
+
+      const porcentaje = resultados[opcion];
+      const porcentajeEl = button.querySelector('.votacion-porcentaje');
+      const progressBar = button.querySelector('.progress-bar');
+
+      if (porcentajeEl && progressBar) {
+        porcentajeEl.textContent = `${porcentaje}%`;
+        progressBar.classList.remove('opacity-0');
+        (progressBar as HTMLElement).style.width = `${porcentaje}%`;
+      }
+    });
+  }
+
+  // Modal close button
+  const cerrarModal = document.getElementById('cerrarModal');
+  const modal = document.getElementById('resultadosModal');
+
+  cerrarModal?.addEventListener('click', () => {
+    modal?.classList.add('hidden');
+  });
+
+  // Close modal when clicking outside
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.add('hidden');
+    }
+  });
+</script>
